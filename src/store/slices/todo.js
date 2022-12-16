@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+export const initialState = {
   allIds: [],
   byIds: {},
-  checked: false
+  completed: false,
+  uncompleted: false,
 };
 
 let nextTodoId = 0;
@@ -48,20 +49,18 @@ export const todoSlice = createSlice({
       targetTodo.checked = !targetTodo.checked;
     },
 
-    checkedCompleted: (state) => {
-      console.log(state.checked)
-      if (state.checked === false) {
-        return state.checked === true
-      }
-      else if (state.checked === true) {
-        return state.checked === false
-      }
-    },
+    filterCompleted: (state, {payload}) => {
+      switch(payload) {
+      case 'completed': state.completed = !state.completed;
+      break;
+      case 'uncompleted' : state.uncompleted = !state.uncompleted;
+      break;
+    }
   },
-});
+}});
 
 
-export const { addTodo, deleteTodo, toggleCompleteness,toggleCheck, checkedCompleted } = todoSlice.actions;
+export const { addTodo, deleteTodo, toggleCompleteness,toggleCheck, filterCompleted } = todoSlice.actions;
 
 export default todoSlice.reducer;
 

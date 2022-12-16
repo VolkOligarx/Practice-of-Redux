@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { todosSelector } from "../../store/selectors/todo";
-import todo, { addTodo, deleteTodo, checkedCompleted } from "../../store/slices/todo";
+import { addTodo, deleteTodo, filterCompleted } from "../../store/slices/todo";
+import { changerActivator } from "../../App";
 
 import styles from "./index.module.css";
 
@@ -28,9 +29,15 @@ export const AddTodo = () => {
     });
   };
 
-  const completedTask = () => {
-    dispatch(checkedCompleted({id: todo.id}))
-  }
+  const handleFirstFilterCompleted = () => {
+    dispatch(filterCompleted('completed'));
+    changerActivator()
+  };
+  
+  const handleSecondFilterCompleted = () => {
+    dispatch(filterCompleted('uncompleted'));
+    changerActivator()
+  };
 
 
   return (
@@ -45,9 +52,9 @@ export const AddTodo = () => {
       </button>
     </div>
     <div className="horizontal">
-      <input className="checkBoxLittle" type="checkbox" onClick={completedTask} />
+      <input className="checkBoxLittle" type="checkbox" onClick={handleFirstFilterCompleted} />
       <p>Сделанно</p>
-      <input className="checkBoxLittle" type="checkbox" />
+      <input className="checkBoxLittle" type="checkbox" onClick={handleSecondFilterCompleted} />
       <p>Не сделанно</p>
     </div>
     </div>
