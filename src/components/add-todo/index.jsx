@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { todosSelector } from "../../store/selectors/todo";
-import { addTodo, deleteTodo, filterCompleted } from "../../store/slices/todo";
-import { changerActivator } from "../../App";
+import { addTodo, deleteTodo, filterCompleted, setFilter, clearFilter, clearAllFilters } from "../../store/slices/todo";
 
 import styles from "./index.module.css";
 
-export const AddTodo = () => {
+export const AddTodo = (props) => {
   const dispatch = useDispatch();
   const todos = useSelector(todosSelector);
-  console.log(todos);
   const [value, setValue] = useState("");
 
   const onInputChange = (evt) => {
@@ -29,34 +27,48 @@ export const AddTodo = () => {
     });
   };
 
-  const handleFirstFilterCompleted = () => {
-    dispatch(filterCompleted('completed'));
-    changerActivator()
+  const handleFirstFilterCompleted = (e) => {
+    dispatch(clearAllFilters())
+    if (e.target.checked) {
+      dispatch(setFilter('doneItems'));
+    } else {
+      dispatch(clearFilter('doneItems'));
+    }
   };
   
-  const handleSecondFilterCompleted = () => {
-    dispatch(filterCompleted('uncompleted'));
-    changerActivator()
+  const handleSecondFilterCompleted = (e) => {
+    dispatch(clearAllFilters())
+    if (e.target.checked) {
+      dispatch(setFilter('inProgressItems'));
+    } else {
+      dispatch(clearFilter('inProgressItems'));
   };
+  };
+
+  const handleAllFiltersCompleted = () => {
+    dispatch(clearAllFilters())
+  }
 
 
   return (
     <div>
-    <div>
-      <input type="text" value={value} onChange={onInputChange} />
-      <button className={styles.addButton} onClick={handleAddTodo}>
-        Add todo
-      </button>
-      <button className={styles.addButton} onClick={handleDeleteTodo}>
-        Delete todo
-      </button>
-    </div>
-    <div className="horizontal">
-      <input className="checkBoxLittle" type="checkbox" onClick={handleFirstFilterCompleted} />
-      <p>Сделанно</p>
-      <input className="checkBoxLittle" type="checkbox" onClick={handleSecondFilterCompleted} />
-      <p>Не сделанно</p>
-    </div>
+      <div>
+        <input type="text" value={value} onChange={onInputChange} />
+        <button className={styles.addButton} onClick={handleAddTodo}>
+          Add todo
+        </button>
+        <button className={styles.addButton} onClick={handleDeleteTodo}>
+          Delete todo
+        </button>
+      </div>
+      <div className="horizontal">
+        <input className="checkBoxLittle" type="radio" name="checkbox" onClick={(e) => handleFirstFilterCompleted(e)} />
+        <p>Сделано</p>
+        <input className="checkBoxLittle" type="radio" name="checkbox" onClick={handleSecondFilterCompleted} />
+        <p>Не сделано</p>
+        <input className="checkBoxLittle" type="radio" name="checkbox" onClick={handleAllFiltersCompleted} defaultChecked="true"/>
+        <p>Все</p>
+      </div>
     </div>
   );
 };
